@@ -43,7 +43,7 @@ searching_for_outliers_delay_columns = data_set[["DELAY_DUE_CARRIER", "DELAY_DUE
 
 def finding_outliers_in_regular_columns(data):
     q1 = data.quantile(0.1)
-    q3 = data.quantile(0.9)
+    q3 = data.quantile(0.95)
     IQR = q3 - q1
     outliers = data[((data < (q1-1.5*IQR)) | (data > (q3+1.5*IQR)))]
     is_outlier = outliers.any(axis=1)
@@ -53,7 +53,7 @@ def finding_outliers_in_regular_columns(data):
 
 def finding_outliers_in_delay_columns(data):
     q1 = data.quantile(0.1)
-    q3 = data.quantile(0.8)
+    q3 = data.quantile(0.9)
     IQR = q3 - q1
     outliers = data[((data < (q1 - 1.5 * IQR)) | (data > (q3 + 1.5 * IQR)))]
     is_outlier = outliers.any(axis=1)
