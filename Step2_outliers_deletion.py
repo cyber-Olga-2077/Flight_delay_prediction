@@ -75,3 +75,5 @@ print(tabulate(data_set.describe(), headers='keys', tablefmt='psql'))
 histogram = data_set.hist(bins=50, figsize=(12, 10))
 figure = histogram[0][0].get_figure()
 figure.savefig(f'Chart_after_dropping_outliers.pdf')
+
+data_set.to_csv('whole_data_set.csv', index=False, header=True)

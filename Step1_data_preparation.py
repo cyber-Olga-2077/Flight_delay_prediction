@@ -33,3 +33,4 @@ for index, df in enumerate(read_csv()):
         df.to_csv('clean_data_set.csv', index=False, header=True)
     else:
         df.to_csv('clean_data_set.csv', mode='a', index=False, header=False)
+
