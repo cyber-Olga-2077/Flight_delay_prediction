@@ -1,14 +1,14 @@
 # Flight_delay_prediction
 
-Here's link to download the dirty data. [Download](https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023/versions/6)
+Here's link to download the dirty data. [Download](https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023)
 
 Download it, extract the .zip archive, copy the file to the Flight_delay_prediction root directory.
 
-Example in my PyCharm: [Click](https://i.imgur.com/r80fLcB.png)
+Example in my PyCharm: [Click](https://i.imgur.com/VGxiugf.png)
 
 First, you need to run the Start.py file to execute all the existing files. It can take a long time, so be patient.
 
-Then you can go the the next empty Stepx_.py file and start coding. During your coding process, remember to run only the current file you are working on to avoid running the whole project again.
+Then you can go the next empty Stepx_.py file and start coding. During your coding process, remember to run only the current file you are working on to avoid running the whole project again.
 
 Remember to import the necessary libraries and functions to EVERY SINGLE ONE of the files.
 

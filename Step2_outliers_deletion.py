@@ -1,7 +1,5 @@
 import pandas as pd
 from tabulate import tabulate
-import numpy as np
-import plotly.express as px
 
 #due to enormous size of our data set and the pandas' interpretetion of column of unknown type as <object> (which is quite memory-intensive) we need to manually define data type of each column
 
@@ -38,7 +36,7 @@ print(tabulate(searching_for_outliers, headers='keys', tablefmt='psql'))
 searching_for_outliers_regular_columns = data_set[["DEP_DELAY", "TAXI_OUT", "TAXI_IN", "ARR_DELAY"]]
 searching_for_outliers_delay_columns = data_set[["DELAY_DUE_CARRIER", "DELAY_DUE_WEATHER", "DELAY_DUE_NAS", "DELAY_DUE_SECURITY", "DELAY_DUE_LATE_AIRCRAFT"]]
 
-#we find outliers using IQR method and then we cap them using 3*std method
+#we find outliers using IQR method and then we drop them from our data set with no mercy
 
 
 def finding_outliers_in_regular_columns(data):
