@@ -1,10 +1,15 @@
 import subprocess
 
 subprocess.run(["python", "Step1_data_preparation.py"])
+print("Step1_data_preparation.py finished")
 subprocess.run(["python", "Step2_outliers_deletion.py"])
+print("Step2_outliers_deletion.py finished")
 subprocess.run(["python", "Step3_creating_train_and_test_set.py"])
-subprocess.run(["python", "Step4_.py"])
-subprocess.run(["python", "Step5_.py"])
+print("Step3_creating_train_and_test_set.py finished")
+subprocess.run(["python", "Step4_transformations_and_pipeline.py"])
+print("Step4_transformations_and_pipeline.py finished")
+subprocess.run(["python", "Step5_proposed_models.py"])
+print("Step5_proposed_models.py finished")
 subprocess.run(["python", "Step6_.py"])
 subprocess.run(["python", "Step7_.py"])
 subprocess.run(["python", "Step8_.py"])

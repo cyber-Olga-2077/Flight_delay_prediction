@@ -9,12 +9,12 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from collections import Counter
 
-data_set = pd.read_csv('flights_sample_3m.csv') #użyty ten plik zamiast whole_data_set,ponieważ były w nim potrzebne mi kolumny (więcej na messengerze ;), ale bedzie można zmienić na whole_data_set )
+data_set = pd.read_csv('train_data_set.csv') #wczytanie danych
 data_set_num = data_set.select_dtypes(include=[np.number]) #wybranie wartości numerycznych
 data_set_cat = data_set.select_dtypes(exclude=[np.number]) #wybranie wartości inne niż numeryczne (kategoryczne)
 
 col_names = ["TAXI_IN", "TAXI_OUT", "AIR_TIME", "DISTANCE", "CRS_DEP_TIME"]
-TI_ix, TO_ix, AT_ix, D_ix, CDT_ix = [data_set_num.columns.get_loc(c) for c in col_names] #nadawanie indeksów dla kolumn
+TAXIIN_ix, TAXIOUT_ix, AIR_TIME_ix, DISTANCE_ix, CRS_DEP_TIME_ix = [data_set_num.columns.get_loc(c) for c in col_names] #nadawanie indeksów dla kolumn
 
 class CombinedAttrs(BaseEstimator, TransformerMixin):   #klasa transformacji
   def __init__(self, add_flight_speed=True):
@@ -24,14 +24,14 @@ class CombinedAttrs(BaseEstimator, TransformerMixin):   #klasa transformacji
     return self
 
   def transform(self, X):
-    flight_speed = X[:,D_ix] / X[:,AT_ix]   #nowa miara
+    flight_speed = X[:, DISTANCE_ix] / X[:, AIR_TIME_ix]   #nowa miara
     #transformacje: log
     log_transformer = FunctionTransformer(np.log, inverse_func=np.exp)
-    log_dis = log_transformer.transform(X[:,D_ix])
-    log_taxi_in = log_transformer.transform(X[:,TI_ix])
-    log_taxi_out = log_transformer.transform(X[:,TO_ix])
+    log_dis = log_transformer.transform(X[:, DISTANCE_ix])
+    log_taxi_in = log_transformer.transform(X[:, TAXIIN_ix])
+    log_taxi_out = log_transformer.transform(X[:, TAXIOUT_ix])
     #transformacje: rbf
-    dep_time = data_set["DEP_TIME"]
+    dep_time = data_set["CRS_DEP_TIME"]
     delays = data_set["DEP_DELAY"]
 
     departure_and_delay = list(zip(dep_time, delays))
@@ -46,9 +46,9 @@ class CombinedAttrs(BaseEstimator, TransformerMixin):   #klasa transformacji
 
     print(f"The most delays occurred at hour: {most_delays}")
     rbf_transformer = FunctionTransformer(rbf_kernel, kw_args=dict(Y=[[most_delays]], gamma=0.1))
-    delay_time_1800 = rbf_transformer.transform(X[:,CDT_ix].reshape(-1, 1))
+    most_delayed_hour = rbf_transformer.transform(X[:, CRS_DEP_TIME_ix].reshape(-1, 1))
 
-    return np.c_[X, flight_speed, log_dis, log_taxi_in, log_taxi_out, delay_time_1800]
+    return np.c_[X, flight_speed, log_dis, log_taxi_in, log_taxi_out, most_delayed_hour]
 
 
 num_pipeline = Pipeline([
