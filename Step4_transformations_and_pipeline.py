@@ -9,7 +9,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from collections import Counter
 
-data_set = pd.read_csv('flights_sample_3m.csv') #użyty ten plik zamiast whole_data_set,ponieważ były w nim potrzebne mi kolumny (więcej na messengerze ;), ale bedzie można zmienić na whole_data_set )
+data_set = pd.read_csv('train_data_set.csv.csv') #użyty ten plik zamiast whole_data_set,ponieważ były w nim potrzebne mi kolumny (więcej na messengerze ;), ale bedzie można zmienić na whole_data_set )
 data_set_num = data_set.select_dtypes(include=[np.number]) #wybranie wartości numerycznych
 data_set_cat = data_set.select_dtypes(exclude=[np.number]) #wybranie wartości inne niż numeryczne (kategoryczne)
 
