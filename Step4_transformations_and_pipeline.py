@@ -9,7 +9,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from collections import Counter
 
+
 data_set = pd.read_csv('train_data_set.csv') #wczytanie danych
+
 data_set_num = data_set.select_dtypes(include=[np.number]) #wybranie wartości numerycznych
 data_set_cat = data_set.select_dtypes(exclude=[np.number]) #wybranie wartości inne niż numeryczne (kategoryczne)
 
