@@ -12,12 +12,13 @@ data_num = data.select_dtypes(include=[np.number])
 X = data_num.drop('ARR_DELAY', axis=1)
 y = data_num['ARR_DELAY']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
 model = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100)
+model.fit(X, y)
 
 scores = cross_val_score(model, X, y, cv=5, scoring='neg_mean_squared_error')
 
 mean_rmse = np.mean(np.sqrt(-scores))
 print('RMSE: ', mean_rmse)
+
+
 
