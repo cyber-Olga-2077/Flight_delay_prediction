@@ -27,4 +27,4 @@ lower_bound = mean_rmse - margin_of_error
 upper_bound = mean_rmse + margin_of_error
 
 print('RMSE: ', mean_rmse)
-print('95% Confidence Interval: ({:.4f}, {:.4f})'.format(lower_bound, upper_bound)) #przedział ufności
+print('95% Confidence Interval: ({:.4f}, {:.4f})'.format(lower_bound, upper_bound)) #przedział ufności 
