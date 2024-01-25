@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_val_score
 from scipy.stats import t
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from module import calculate_dist_between_airports
+import joblib
 
 
 train_set = pd.read_csv('train_data_set.csv')
@@ -26,6 +26,8 @@ mse_test = mean_squared_error(y_test, y_pred_test)
 rmse_test = np.sqrt(mse_test)
 mae_test = mean_absolute_error(y_test, y_pred_test)
 r2_test = r2_score(y_test, y_pred_test)
+
+joblib.dump(forest, 'random_forest_model.joblib')
 
 #Walidacja krzyżowa na train secie
 scores = cross_val_score(forest, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
@@ -50,32 +52,3 @@ print('Root Mean Squared Error:', rmse_test)
 print('Mean Absolute Error:', mae_test)
 print('R-squared:', r2_test)
 print("Based on these results, the model appears to be accurate and generalizes well to unseen data.")
-
-example_data = {
-    'FL_DATE': '2024-01-23',
-    'AIRLINE': 'Delta Air Lines Inc.',
-    'AIRLINE_CODE': 'DL',
-    'ORIGIN': 'JFK',
-    'ORIGIN_CITY': 'New York',
-    'DEST': 'LAX',
-    'DEST_CITY': 'Los Angeles',
-    'CRS_DEP_TIME': 1200,
-    'DISTANCE': calculate_dist_between_airports('JFK', 'LAX'),
-    'FL_MONTH': 1,
-}
-
-example_data = pd.DataFrame([example_data])
-example_data['FL_DATE'] = pd.to_datetime(example_data['FL_DATE'])
-
-#Dodanie brakujacych w przykladzie kolumn z modelu
-required_features = set(X_train.columns)
-for col in required_features:
-    if col not in example_data:
-        example_data[col] = np.nan
-
-#Zmiana kolejnosci kolumn na zgodna z modelem
-example_data = example_data[X_train.columns]
-
-#Predykcje modelu
-y_pred_example = forest.predict(example_data)
-print('Predicted Delay for the Example Data:', y_pred_example[0])
