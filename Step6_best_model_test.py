@@ -7,27 +7,33 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 
 
-train_set = pd.read_csv('train_data_set.csv')
-test_set = pd.read_csv('test_data_set.csv')
+train_set = pd.read_csv('train_set_transformed.csv')
+test_set = pd.read_csv('test_set_transformed.csv')
 train_set_num = train_set.select_dtypes(include=[np.number])
 test_set_num = test_set.select_dtypes(include=[np.number])
 
-X_train = train_set_num.drop('ARR_DELAY', axis=1)
 y_train = train_set_num['ARR_DELAY']
-X_test = test_set_num.drop('ARR_DELAY', axis=1)
+X_train = train_set_num.drop(['ARR_DELAY'], axis=1)
+
 y_test = test_set_num['ARR_DELAY']
-forest = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100)
-forest.fit(X_train, y_train)
+X_test = test_set_num.drop('ARR_DELAY', axis=1)
+
+# print(X_train.columns)
+#
+# forest = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100, verbose=100, n_jobs=-1)
+# forest.fit(X_train, y_train)
+
+forest = joblib.load('random_forest_model.joblib')
 
 y_pred_test = forest.predict(X_test)
-scores = cross_val_score(forest, X_test, y_test, cv=5, scoring='neg_mean_squared_error')
+# scores = cross_val_score(forest, X_test, y_test, cv=5, scoring='neg_mean_squared_error')
 
 mse_test = mean_squared_error(y_test, y_pred_test)
 rmse_test = np.sqrt(mse_test)
 mae_test = mean_absolute_error(y_test, y_pred_test)
 r2_test = r2_score(y_test, y_pred_test)
 
-joblib.dump(forest, 'random_forest_model.joblib')
+# joblib.dump(forest, 'random_forest_model.joblib')
 
 #Walidacja krzyżowa na train secie
 scores = cross_val_score(forest, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
