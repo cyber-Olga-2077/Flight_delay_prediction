@@ -1,39 +1,62 @@
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import FunctionTransformer
+
+from Step4_transformations_and_pipeline import DISTANCE_ix
 from module import calculate_dist_between_airports
 import pandas as pd
 import numpy as np
 import joblib
 
+class CombinedAttrs(BaseEstimator, TransformerMixin):   #klasa transformacji
+    def __init__(self):
+        pass
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        log_transformer = FunctionTransformer(np.log, inverse_func=np.exp)
+        LOG_DISTANCE = log_transformer.transform(X[:, DISTANCE_ix])
+        X = np.delete(X, DISTANCE_ix, axis=1)
+
+        return np.c_[X, LOG_DISTANCE]
+
 loaded_model = joblib.load('random_forest_model.joblib')
 
 example_data = {
-    'FL_DATE': '2024-01-23',
-    'AIRLINE': 'Delta Air Lines Inc.',
-    'AIRLINE_CODE': 'DL',
-    'ORIGIN': 'JFK',
-    'ORIGIN_CITY': 'New York',
-    'DEST': 'LAX',
-    'DEST_CITY': 'Los Angeles',
-    'CRS_DEP_TIME': 1200,
-    'DISTANCE': calculate_dist_between_airports('JFK', 'LAX'),
-    'FL_MONTH': 1,
+    'AIRLINE': 'American Airlines Inc.',
+    'AIRLINE_CODE': 'AA',
+    'ORIGIN': 'CLT',
+    'ORIGIN_CITY': 'Charlotte, NC',
+    'DEST': 'CMH',
+    'DEST_CITY': 'Columbus, OH',
+    'CRS_DEP_TIME': 2040,
+    'CRS_ARR_TIME': 230,
+    'DISTANCE': calculate_dist_between_airports('CLT', 'CMH'),
+    'FL_DAY': 14,
+    'FL_MONTH': 4,
+    'FL_YEAR': 2023,
 }
 
 example_data = pd.DataFrame([example_data])
-example_data['FL_DATE'] = pd.to_datetime(example_data['FL_DATE'])
 
-num_rows_to_read = 100
-train_set_partial = pd.read_csv('train_data_set.csv', nrows=num_rows_to_read)
-train_set_num = train_set_partial.select_dtypes(include=[np.number])
-X_train = train_set_num.drop('ARR_DELAY', axis=1)
+num_pipeline = joblib.load('num_pipeline.joblib')
+cat_pipeline = joblib.load('categorical_pipeline.joblib')
 
-#Dodanie brakujacych w przykladzie kolumn z modelu
-required_features = set(X_train.columns)
-for col in required_features:
-    if col not in example_data:
-        example_data[col] = np.nan
+example_data_num = example_data.select_dtypes(include=[np.number])
+example_data_cat = example_data.select_dtypes(exclude=[np.number])
 
-#Zmiana kolejnosci kolumn na zgodna z modelem
-example_data = example_data[X_train.columns]
+example_data_num_transformed = num_pipeline.transform(example_data_num)
+example_data_cat_transformed = cat_pipeline.transform(example_data_cat)
+
+num_columns = example_data_num.columns.drop('DISTANCE')
+
+example_data_num_transformed_df = pd.DataFrame(data=example_data_num_transformed, columns=list(num_columns) + ['LOG_DISTANCE'])
+example_data_cat_transformed_df = pd.DataFrame(data=example_data_cat_transformed, columns=example_data_cat.columns)
+
+example_data = example_data_cat_transformed_df.join(example_data_num_transformed_df)
+
+print(example_data.columns)
 
 #Predykcje modelu
 y_pred_example = loaded_model.predict(example_data)

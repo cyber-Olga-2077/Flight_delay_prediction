@@ -1,42 +1,32 @@
 import pandas as pd
 from tabulate import tabulate
 
-#due to enormous size of our data set and the pandas' interpretetion of column of unknown type as <object> (which is quite memory-intensive) we need to manually define data type of each column
+# due to enormous size of our data set and the pandas' interpretetion of column of unknown type as <object>
+# (which is quite memory-intensive) we need to manually define data type of each column
 
-dtypes={
-    "FL_DATE": "str",
+dtypes = {
+    "FL_DAY": "int",
+    "FL_MONTH": "int",
+    "FL_YEAR": "int",
     "AIRLINE": "str",
     "AIRLINE_CODE": "str",
-    "FL_NUMBER": "int",
     "ORIGIN": "str",
     "ORIGIN_CITY": "str",
     "DEST": "str",
     "DEST_CITY": "str",
     "CRS_DEP_TIME": "int",
-    "DEP_DELAY": "float64",
-    "TAXI_OUT": "float64",
-    "TAXI_IN": "float64",
     "CRS_ARR_TIME": "int",
     "ARR_DELAY": "float64",
-    "CANCELLED": "bool",
-    "CANCELLATION_CODE": "str",
-    "DIVERTED": "bool",
     "DISTANCE": "int",
-    "DELAY_DUE_CARRIER": "float64",
-    "DELAY_DUE_WEATHER": "float64",
-    "DELAY_DUE_NAS": "float64",
-    "DELAY_DUE_SECURITY": "float64",
-    "DELAY_DUE_LATE_AIRCRAFT": "float64"
 }
-
 
 data_set = pd.read_csv('clean_data_set.csv', dtype=dtypes)
 searching_for_outliers = data_set.describe()
 print(tabulate(searching_for_outliers, headers='keys', tablefmt='psql'))
-searching_for_outliers_regular_columns = data_set[["DEP_DELAY", "TAXI_OUT", "TAXI_IN", "ARR_DELAY"]]
+searching_for_outliers_regular_columns = data_set[["ARR_DELAY"]]
 
-#we find outliers using IQR method and then we drop them from our data set with no mercy
 
+# we find outliers using IQR method, and then we drop them from our data set with no mercy
 def finding_outliers_in_regular_columns(data):
     q1 = data.quantile(0.05)
     q3 = data.quantile(0.95)

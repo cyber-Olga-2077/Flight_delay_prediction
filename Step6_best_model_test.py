@@ -7,16 +7,18 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 
 
-train_set = pd.read_csv('train_data_set.csv')
-test_set = pd.read_csv('test_data_set.csv')
+train_set = pd.read_csv('train_set_transformed.csv')
+test_set = pd.read_csv('test_set_transformed.csv')
 train_set_num = train_set.select_dtypes(include=[np.number])
 test_set_num = test_set.select_dtypes(include=[np.number])
 
-X_train = train_set_num.drop('ARR_DELAY', axis=1)
 y_train = train_set_num['ARR_DELAY']
-X_test = test_set_num.drop('ARR_DELAY', axis=1)
+X_train = train_set_num.drop(['ARR_DELAY'], axis=1)
+
 y_test = test_set_num['ARR_DELAY']
-forest = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100)
+X_test = test_set_num.drop('ARR_DELAY', axis=1)
+
+forest = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100, verbose=100, n_jobs=-1)
 forest.fit(X_train, y_train)
 
 y_pred_test = forest.predict(X_test)
@@ -52,3 +54,14 @@ print('Root Mean Squared Error:', rmse_test)
 print('Mean Absolute Error:', mae_test)
 print('R-squared:', r2_test)
 print("Based on these results, the model appears to be accurate and generalizes well to unseen data.")
+
+#save all the results in a txt file
+with open('results.txt', 'w') as f:
+    f.write('Training Set RMSE (Cross-Validation): {:.4f}\n'.format(mean_rmse))
+    f.write('95% Confidence Interval: ({:.4f}, {:.4f})\n'.format(lower_bound, upper_bound))
+    f.write('\nTest Set Metrics:\n')
+    f.write('Mean Squared Error: {:.4f}\n'.format(mse_test))
+    f.write('Root Mean Squared Error: {:.4f}\n'.format(rmse_test))
+    f.write('Mean Absolute Error: {:.4f}\n'.format(mae_test))
+    f.write('R-squared: {:.4f}\n'.format(r2_test))
+    f.write("Based on these results, the model appears to be accurate and generalizes well to unseen data.\n")
