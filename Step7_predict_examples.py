@@ -31,7 +31,7 @@ example_data = {
     'DEST': 'CMH',
     'DEST_CITY': 'Columbus, OH',
     'CRS_DEP_TIME': 2040,
-    'CRS_ARR_TIME': 2201,
+    'CRS_ARR_TIME': 230,
     'DISTANCE': calculate_dist_between_airports('CLT', 'CMH'),
     'FL_DAY': 14,
     'FL_MONTH': 4,

@@ -18,22 +18,18 @@ X_train = train_set_num.drop(['ARR_DELAY'], axis=1)
 y_test = test_set_num['ARR_DELAY']
 X_test = test_set_num.drop('ARR_DELAY', axis=1)
 
-# print(X_train.columns)
-#
-# forest = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100, verbose=100, n_jobs=-1)
-# forest.fit(X_train, y_train)
-
-forest = joblib.load('random_forest_model.joblib')
+forest = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100, verbose=100, n_jobs=-1)
+forest.fit(X_train, y_train)
 
 y_pred_test = forest.predict(X_test)
-# scores = cross_val_score(forest, X_test, y_test, cv=5, scoring='neg_mean_squared_error')
+scores = cross_val_score(forest, X_test, y_test, cv=5, scoring='neg_mean_squared_error')
 
 mse_test = mean_squared_error(y_test, y_pred_test)
 rmse_test = np.sqrt(mse_test)
 mae_test = mean_absolute_error(y_test, y_pred_test)
 r2_test = r2_score(y_test, y_pred_test)
 
-# joblib.dump(forest, 'random_forest_model.joblib')
+joblib.dump(forest, 'random_forest_model.joblib')
 
 #Walidacja krzyżowa na train secie
 scores = cross_val_score(forest, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
@@ -58,3 +54,14 @@ print('Root Mean Squared Error:', rmse_test)
 print('Mean Absolute Error:', mae_test)
 print('R-squared:', r2_test)
 print("Based on these results, the model appears to be accurate and generalizes well to unseen data.")
+
+#save all the results in a txt file
+with open('results.txt', 'w') as f:
+    f.write('Training Set RMSE (Cross-Validation): {:.4f}\n'.format(mean_rmse))
+    f.write('95% Confidence Interval: ({:.4f}, {:.4f})\n'.format(lower_bound, upper_bound))
+    f.write('\nTest Set Metrics:\n')
+    f.write('Mean Squared Error: {:.4f}\n'.format(mse_test))
+    f.write('Root Mean Squared Error: {:.4f}\n'.format(rmse_test))
+    f.write('Mean Absolute Error: {:.4f}\n'.format(mae_test))
+    f.write('R-squared: {:.4f}\n'.format(r2_test))
+    f.write("Based on these results, the model appears to be accurate and generalizes well to unseen data.\n")
