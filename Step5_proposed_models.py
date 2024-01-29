@@ -13,7 +13,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.model_selection import train_test_split
 
 
-data = pd.read_csv('test_set_transformed.csv')
+data = pd.read_csv('train_set_transformed.csv')
 data_num = data.select_dtypes(include=[np.number])
 X = data_num.drop('ARR_DELAY', axis=1)
 y = data_num['ARR_DELAY']
