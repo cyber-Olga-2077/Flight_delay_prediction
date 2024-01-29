@@ -18,7 +18,7 @@ X_train = train_set_num.drop(['ARR_DELAY'], axis=1)
 y_test = test_set_num['ARR_DELAY']
 X_test = test_set_num.drop('ARR_DELAY', axis=1)
 
-forest = RandomForestRegressor(n_estimators=100, max_depth=20, min_samples_leaf=50, min_samples_split=100, verbose=100, n_jobs=-1)
+forest = RandomForestRegressor(n_estimators=100, max_depth=None, min_samples_leaf=20, min_samples_split=50, verbose=100, n_jobs=-1)
 forest.fit(X_train, y_train)
 
 y_pred_test = forest.predict(X_test)
