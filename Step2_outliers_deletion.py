@@ -28,8 +28,8 @@ searching_for_outliers_regular_columns = data_set[["ARR_DELAY"]]
 
 # we find outliers using IQR method, and then we drop them from our data set with no mercy
 def finding_outliers_in_regular_columns(data):
-    q1 = data.quantile(0.05)
-    q3 = data.quantile(0.95)
+    q1 = data.quantile(0.10)
+    q3 = data.quantile(0.90)
     IQR = q3 - q1
     outliers = data[((data < (q1-1.5*IQR)) | (data > (q3+1.5*IQR)))]
     is_outlier = outliers.any(axis=1)
