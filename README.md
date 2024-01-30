@@ -13,7 +13,7 @@ Then you can go the next empty Stepx_.py file and start coding. During your codi
 Remember to import the necessary libraries and functions to EVERY SINGLE ONE of the files.
 
 
-Remember that you can read the data from csv files with the pandas library. You can also save the data to csv files with the pandas library. Our sets are divided into 3 files:
+Remember that you can read the data from csv files with the pandas library. You can also save the data to csv files with the pandas library. Our initial set is divided into 3 files:
  
 "whole_data_set" - contains all the cleaned data with deleted outliers.
 
